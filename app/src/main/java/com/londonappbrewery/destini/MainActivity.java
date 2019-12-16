@@ -18,13 +18,37 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        sProgress = 1;
         currQuestion = findViewById(R.id.storyTextView);
         topButton = findViewById(R.id.buttonTop);
         bottomButton = findViewById(R.id.buttonBottom);
         restart = findViewById(R.id.restartButton);
         restart.setVisibility(View.INVISIBLE);
+        if(savedInstanceState!=null){
+            sProgress = savedInstanceState.getInt("sProgress");
+            if(sProgress == 2){
+                currQuestion.setText(R.string.T3_Story);
+                topButton.setText(R.string.T3_Ans1);
+                bottomButton.setText(R.string.T3_Ans2);
+            }
+            if(sProgress == 3){
+                currQuestion.setText(R.string.T2_Story);
+                topButton.setText(R.string.T2_Ans1);
+                bottomButton.setText(R.string.T2_Ans2);
+            }
+            if(sProgress>3){
+                if(sProgress==4)
+                    currQuestion.setText(R.string.T4_End);
+                if(sProgress==5)
+                    currQuestion.setText(R.string.T5_End);
+                if(sProgress==6)
+                    currQuestion.setText(R.string.T6_End);
+                restart.setVisibility(View.VISIBLE);
+                topButton.setVisibility(View.INVISIBLE);
+                bottomButton.setVisibility(View.INVISIBLE);
+            }
+        }
+        else
+            sProgress = 1;
 
         topButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,19 +76,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public void onSaveInstanceState(Bundle out){
+        super.onSaveInstanceState(out);
+        out.putInt("sProgress",sProgress);
+    }
     private void updateQuestion(boolean top){
         if(sProgress == 2){
             if(top){
                 currQuestion.setText(R.string.T6_End);
                 bottomButton.setVisibility(View.INVISIBLE);
                 topButton.setVisibility(View.INVISIBLE);
-                sProgress = sProgress + 10;
+                sProgress = sProgress + 3;
             }
             else{
                 currQuestion.setText(R.string.T5_End);
                 bottomButton.setVisibility(View.INVISIBLE);
                 topButton.setVisibility(View.INVISIBLE);
-                sProgress = sProgress + 10;
+                sProgress = sProgress + 2;
             }
         }
         if(sProgress == 3){
@@ -78,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 currQuestion.setText(R.string.T4_End);
                 bottomButton.setVisibility(View.INVISIBLE);
                 topButton.setVisibility(View.INVISIBLE);
-                sProgress = sProgress + 10;
+                sProgress = sProgress + 1;
             }
         }
         if(sProgress == 1){
@@ -95,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 sProgress = sProgress + 2;
             }
         }
-        if(sProgress > 10){
+        if(sProgress > 3){
             restart.setVisibility(View.VISIBLE);
             topButton.setVisibility(View.INVISIBLE);
             bottomButton.setVisibility(View.INVISIBLE);
